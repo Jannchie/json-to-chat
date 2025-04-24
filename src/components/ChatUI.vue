@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 
 interface ChatMessage {
-  role: 'system' | 'user' | 'agent'
+  role: 'system' | 'user' | 'assistant'
   content: string
 }
 
@@ -15,28 +15,28 @@ defineProps<{
 const roleClasses = computed(() => ({
   system: 'bg-gray-700 text-gray-100 shadow-sm',
   user: 'bg-gray-600 text-gray-100 shadow-sm',
-  agent: 'bg-gray-800 text-gray-100 shadow-sm',
+  assistant: 'bg-gray-800 text-gray-100 shadow-sm',
 }))
 
 // More subtle message bubble styling
 const messageClasses = computed(() => ({
   system: 'bg-gray-100 border-gray-200 text-gray-800 shadow-sm',
   user: 'bg-blue-50 border-gray-200 text-gray-800 shadow-sm',
-  agent: 'bg-white border-gray-200 text-gray-800 shadow-sm',
+  assistant: 'bg-white border-gray-200 text-gray-800 shadow-sm',
 }))
 
 // Determine message alignment based on role
 const messageAlignment = computed(() => ({
   system: 'items-center',
   user: 'items-end',
-  agent: 'items-start',
+  assistant: 'items-start',
 }))
 
 // Simplified icons for each role
 const roleIcons = computed(() => ({
   system: 'i-tabler-settings',
   user: 'i-tabler-user',
-  agent: 'i-tabler-robot',
+  assistant: 'i-tabler-robot',
 }))
 </script>
 

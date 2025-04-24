@@ -5,6 +5,28 @@ import ChatUI from './components/ChatUI.vue'
 import JsonEditor from './components/JsonEditor.vue'
 import 'splitpanes/dist/splitpanes.css'
 
+// Helper functions for UTF-8 compatible Base64 encoding/decoding
+function encodeBase64UTF8(str: string): string {
+  // Use btoa with encodeURIComponent to handle Unicode characters properly
+  return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, (_, p1) => {
+    return String.fromCharCode(Number.parseInt(p1, 16))
+  }))
+}
+
+function decodeBase64UTF8(str: string): string {
+  try {
+    // Use atob with decodeURIComponent to handle Unicode characters properly
+    return decodeURIComponent(
+      Array.from(atob(str), c =>
+        `%${c.charCodeAt(0).toString(16).padStart(2, '0')}`).join(''),
+    )
+  }
+  catch (e) {
+    console.error('Failed to decode string:', e)
+    throw new Error('Invalid encoded content')
+  }
+}
+
 // Sample default JSON for demonstration
 const defaultJson = JSON.stringify([
   {
@@ -16,7 +38,7 @@ const defaultJson = JSON.stringify([
     content: 'Hello, can you help me with a coding problem?',
   },
   {
-    role: 'agent',
+    role: 'assistant',
     content: 'Of course! I\'d be happy to help with your coding problem. What specifically are you working on?',
   },
 ], null, 2)
@@ -33,8 +55,8 @@ const jsonParam = urlParams.get('json')
 
 if (jsonParam) {
   try {
-    // Decode the base64 parameter
-    const decodedJson = atob(jsonParam)
+    // Decode the parameter using UTF-8 compatible method
+    const decodedJson = decodeBase64UTF8(jsonParam)
     // Try to parse to validate it's proper JSON
     JSON.parse(decodedJson)
     // If valid, set it as the current content
@@ -49,18 +71,18 @@ if (jsonParam) {
 watchEffect(() => {
   // Update the URL without reloading the page when JSON content changes
   const url = new URL(window.location.href)
-  url.searchParams.set('json', btoa(jsonContent.value))
+  url.searchParams.set('json', encodeBase64UTF8(jsonContent.value))
   window.history.replaceState({}, '', url.toString())
 })
 
-// Generate shareable URL with base64 encoded JSON
+// Generate shareable URL with encoded JSON
 function generateShareUrl() {
   try {
-    // Encode current JSON content to base64
-    const base64Json = btoa(jsonContent.value)
+    // Encode current JSON content using UTF-8 compatible method
+    const encodedJson = encodeBase64UTF8(jsonContent.value)
     // Create URL with parameter
     const url = new URL(window.location.href)
-    url.search = `?json=${base64Json}`
+    url.search = `?json=${encodedJson}`
     shareUrl.value = url.toString()
 
     // Copy to clipboard
@@ -98,7 +120,7 @@ watchEffect(() => {
     }
 
     // Define allowed roles for stricter type checking
-    const allowedRoles = ['system', 'user', 'agent'] as const
+    const allowedRoles = ['system', 'user', 'assistant'] as const
     type ChatRole = typeof allowedRoles[number]
 
     for (let i = 0; i < parsed.length; i++) {
@@ -123,7 +145,7 @@ watchEffect(() => {
       }
 
       if (!allowedRoles.includes(item.role as ChatRole)) {
-        jsonError.value = `Item at index ${i} has invalid 'role' (must be 'system', 'user', or 'agent')`
+        jsonError.value = `Item at index ${i} has invalid 'role' (must be 'system', 'user', or 'assistant')`
         parsedMessages.value = []
         return
       }
