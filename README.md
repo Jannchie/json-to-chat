@@ -1,5 +1,9 @@
 # JSON to Chat Converter
 
+[![CodeTime Badge](https://img.shields.io/endpoint?style=social&color=222&url=https%3A%2F%2Fapi.codetime.dev%2Fshield%3Fid%3D2%26project%3Djson-to-chat%26in=0)](https://codetime.dev)
+
+![docs](./docs/image.png)
+
 A Vue.js application that converts JSON chat data into a visual chat interface. This tool allows you to:
 
 - Edit JSON chat data in a Monaco-based editor
