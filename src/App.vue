@@ -23,7 +23,7 @@ const defaultJson = JSON.stringify([
 
 const jsonContent = ref(defaultJson)
 const jsonError = ref<string | null>(null)
-const parsedMessages = ref([])
+const parsedMessages = ref<Array<any>>([])
 const shareUrl = ref('')
 const showCopiedMessage = ref(false)
 
