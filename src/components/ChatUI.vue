@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { marked } from 'marked'
 import { computed } from 'vue'
 
 interface ChatMessage {
@@ -10,6 +11,11 @@ defineProps<{
   messages: ChatMessage[]
   error: string | null
 }>()
+
+// Parse markdown content
+function parseMarkdown(content: string) {
+  return marked(content)
+}
 
 // More subtle role badge styling with less vibrant colors
 const roleClasses = computed(() => ({
@@ -89,15 +95,12 @@ const roleIcons = computed(() => ({
           class="max-w-[85%] border rounded-md p-3"
           :class="messageClasses[message.role]"
         >
-          <div class="whitespace-pre-wrap text-gray-700 leading-relaxed">
-            {{ message.content }}
-          </div>
+          <div
+            class="markdown-content text-gray-700"
+            v-html="parseMarkdown(message.content)"
+          />
         </div>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-/* Removed animation for a more subtle experience */
-</style>
