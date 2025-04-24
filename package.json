@@ -29,6 +29,7 @@
     "@iconify/json": "^2.2.330",
     "@jannchie/eslint-config": "^3.4.6",
     "@types/node": "^22.14.1",
+    "@types/splitpanes": "^2.2.6",
     "@unocss/eslint-plugin": "66.1.0-beta.12",
     "@unocss/preset-icons": "66.1.0-beta.12",
     "@unocss/reset": "66.1.0-beta.12",

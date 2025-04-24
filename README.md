@@ -68,6 +68,7 @@ The application expects JSON in the following format:
 ```
 
 Supported roles:
+
 - `system`: System instructions or context
 - `user`: User messages
 - `agent`: AI assistant responses
